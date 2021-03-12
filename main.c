@@ -11,37 +11,36 @@ int main(){
   float maxSpeed;
   Colecao *c = NULL;
 
-	Carro *carro = NULL, **printado = NULL;
+	Carro *carro = NULL, **printado = NULL, *print;
 	Carro **addCarro = NULL;
 	
 
   void* buscaNome; 
-  void* remov;
-  int aux, dest;
-  int opc, tamColecao, excluir, coldest;
+  void* remove;
+  int aux;
+  int opcao, tamanho, excluir, destruir;
   void* removido;
-  void *print;
  
   
   do{
     printf("\n----------------- MENU ----------------\n");
-            printf("\t[1] - Criar uma colecao\n");
-            printf("\t[2] - Inserir Carro\n");
-            printf("\t[3] - Remover Carro\n");
-            printf("\t[4] - Consultar Carro\n");
-            printf("\t[5] - Listar Carros\n");
-            printf("\t[6] - Destruir colecao\n");
-            printf("\t[0] - Sair\n");
+            printf("[1] - Criar uma colecao\n");
+            printf("[2] - Inserir Carro\n");
+            printf("[3] - Remover Carro\n");
+            printf("[4] - Consultar Carro\n");
+            printf("[5] - Listar Carros\n");
+            printf("[6] - Destruir colecao\n");
+            printf("[0] - Sair\n");
            printf("\n-----------------------------------------\n");
            printf("Digite a opcao desejada: ");
-            scanf("%d",&opc);
+            scanf("%d",&opcao);
     
-    switch(opc){
+    switch(opcao){
       case 1: 
-        printf("\n\tQual o tamanho da coleção que deseja inserir: ");
-        scanf("%d", &tamColecao);
-        if(tamColecao > 0 && (c == NULL) ){
-          c = colCreate(tamColecao);
+        printf("\nQual o tamanho da coleção que deseja inserir: ");
+        scanf("%d", &tamanho);
+        if(tamanho > 0 && (c == NULL) ){
+          c = colCreate(tamanho);
           if(c!=NULL){
             printf("\nA colecao foi criada com sucesso.\n");
           }
@@ -78,14 +77,13 @@ int main(){
                 printf("\nCarro cadastrado com sucesso\n");
               }
               else{
-                printf("\nFalha no cadastro, repita a operação\n");
+                printf("\nFalha no cadastro\n");
               }
             }
-            ///////////////////////////////////////
           }
         }
         else{
-          printf("\nPrimeiro você deve criar a coleção\n");
+          printf("\nPrimeiro crie a coleção\n");
         }
         break;
       case 3:
@@ -95,14 +93,14 @@ int main(){
           scanf("%s",nomeCarro);
           fflush(stdin);
           if(c->numItens >= 0){
-            remov = colRemove(c,(void*)nomeCarro,cpm);
-            if(remov == NULL){
-                printf("\nO carro não foi encontrado sendo assim não pode ser retirado\n");
+            remove = colRemove(c,(void*)nomeCarro,cpm);
+            if(remove == NULL){
+                printf("\nO carro nao foi encontrado\n");
               }else{
                 printf("\nCarro removido\n");
               }
           }else{
-            printf("\nEstá colecao nao possui carros ainda\n");
+            printf("\nEsta colecao nao possui carros ainda\n");
           }
         }else{
           printf("\nSua colecao ainda nao foi criada\n");
@@ -111,7 +109,7 @@ int main(){
       case 4:
         if(c!= NULL && c->numItens>=0){
           nomeCarro = (char*) malloc(sizeof(char*)*50);
-          printf("\nDigite o nome do carro que será buscado: ");
+          printf("\nDigite o nome do carro que sera buscado: ");
           scanf("%s",nomeCarro);
           fflush(stdin);
           if(c->numItens >= 0){
@@ -123,7 +121,7 @@ int main(){
               } 
             fflush(stdin);
           }else{
-            printf("\nEstá colecao nao possui carros ainda\n");
+            printf("\nEsta colecao nao possui carros ainda\n");
           }
         }else{
           printf("\nSua colecao ainda nao foi criada\n");
@@ -135,16 +133,17 @@ int main(){
           for(int i = 0; i <= c->numItens; i++){
             print = printColecao(c, i);
             printado = (Carro**) print; 
-            printf("\n Carro - nome:%s\tano:%d\tvelocidade:%.2f", (char*)(*printado)->nomeCarro, (int)(*printado)->ano, (float)(*printado)->maxSpeed);
+						printf("Carro [%d]", i);
+            printf("\n Nome:%s \n Ano:%d \n Velocidade:%.2f", (char*)(*printado)->nomeCarro, (int)(*printado)->ano, (float)(*printado)->maxSpeed);
           }
           printf("\n------------------------------------\n");
         }
         else{
-          printf("\nPrimeiro voce deve criar uma colecao e inserir algum carro\n");
+          printf("\nPrimeiro crie a colecao e insera um\n");
         }  
         break;
       case 6:
-        printf("\nDeseja excluir colecao? (0-Nao 1-Sim): ");
+        printf("\nDeseja excluir colecao? (1-Sim 0-Nao): ");
         scanf("%d", &excluir);
         if(excluir == 0){
           break;
@@ -152,28 +151,27 @@ int main(){
         else{ 
           if(excluir == 1){
             if(c!=NULL){
-              coldest = colDestroy(c);
-              if(coldest == TRUE){
+              destruir = colDestroy(c);
+              if(destruir == TRUE){
                 printf("\nColecao destruida\n");
               }
               else{
-                printf("\nFalha na destruicao da colecao\n");
+                printf("\nFalha ao destruit\n");
               }
             } 
             else{
-              printf("\nPrimeiro voce deve criar uma colecao\n");
+              printf("\nPrimeiro crie a colecao\n");
             }
           }
         }
       break;
     }
-  }while(opc!=0);
+  }while(opcao!=0);
   
   printf("\nObrigada por usar nosso sistema\n");
 
     
 }
-
 
 // verifica se o nome do carro está na colecao
 int cpm(const void* elm, const void* nome){ 
@@ -182,14 +180,14 @@ int cpm(const void* elm, const void* nome){
   Carro **c;
   col = (Colecao*) elm;
   c = (Carro**)col;
-  char *alu = (char*) (*c)->nomeCarro;
+  char *car = (char*) (*c)->nomeCarro;
   char *nom = (char*)nome ;
-  for(i=0; i < strlen(alu); i++){
-    if(alu[i] == nom[i]){
+  for(i=0; i < strlen(car); i++){
+    if(car[i] == nom[i]){
       count++;
     }
   }
-  if(count == strlen(alu)){
+  if(count == strlen(car)){
     return TRUE;
   }else{
     return FALSE;
